@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="hi"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<html lang='hi'><head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1, viewport-fit=cover'>
 <title>Key Master</title>
 <style>
 :root{--bg:#0f1220;--card:#1b2036;--ac:#6c8cff;--ok:#3ddc97;--bad:#ff5c72;--tx:#e8ebff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -10,87 +10,186 @@ main{max-width:720px;margin:0 auto}
 h1{text-align:center;margin:8px 0}
 .card{background:var(--card);border-radius:14px;padding:14px;margin:10px 0}
 button{background:var(--ac);color:#fff;border:0;border-radius:10px;padding:10px 16px;font-size:16px;cursor:pointer;margin:4px;touch-action:manipulation}
-button[disabled]{opacity:.4;cursor:not-allowed}
+button[disabled]{opacity:.4}
 .lv{display:block;width:100%;text-align:left;background:#252b4a;margin:6px 0}
-kbd{display:inline-block;background:#0b0e1a;border:1px solid #3a4270;border-bottom-width:3px;border-radius:6px;padding:4px 10px;margin:2px;font:16px monospace;color:var(--tx)}
-kbd.on{background:var(--ok);color:#04150d}
-.mock{border:2px dashed #3a4270;border-radius:12px;padding:16px;text-align:center;min-height:110px}
-.mock.ok{border-color:var(--ok);background:#12301f}
-.mock.bad{border-color:var(--bad);animation:sh .3s}
-@keyframes sh{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
-.how{font-size:14px;line-height:1.5;color:#c4ccff;background:#0b0e1a;border-radius:8px;padding:8px;margin:8px 0;text-align:left}
 .bar{height:8px;background:#0b0e1a;border-radius:8px;overflow:hidden;margin-bottom:8px}
 .bar i{display:block;height:100%;background:var(--ok)}
 pre{white-space:pre-wrap;font:inherit;line-height:1.7;margin:8px 0 0}
 details{margin:6px 0}
+.how{font-size:14px;line-height:1.5;color:#c4ccff;background:#0b0e1a;border-radius:8px;padding:8px;margin:8px 0;white-space:pre-wrap}
+.sc{margin:8px 0;border-radius:10px;padding:2px}
+.sc.ok{outline:3px solid var(--ok)}
+.ed{background:#0b0e1a;border-radius:8px;padding:10px;font:16px/1.6 monospace;white-space:pre-wrap;min-height:90px;word-break:break-word}
+.ed mark{background:#3d63ff;color:#fff}
+.cr{display:inline-block;width:2px;height:1.1em;background:var(--ok);vertical-align:text-bottom;animation:bl 1s steps(2) infinite}
+@keyframes bl{50%{opacity:0}}
+.it{padding:9px 10px;border-radius:8px;margin:3px 0;background:#252b4a}
+.it.on{background:#3d63ff}
+.it.fc{outline:2px solid var(--ok)}
+.tab{display:inline-block;padding:7px 11px;margin:2px;background:#252b4a;border-radius:8px}
+.tab.on{background:#3d63ff}
+.dk{position:relative;height:190px;background:#0b0e1a;border-radius:8px;overflow:hidden}
+.wn{position:absolute;background:#252b4a;border:2px solid #3a4270;border-radius:6px;font-size:13px;padding:4px;overflow:hidden}
+.wn.ac{border-color:var(--ok)}
 #kb{background:var(--card);border-radius:14px;padding:6px;margin:10px 0}
 .r{display:flex;gap:4px;margin:4px 0}
 .k{flex:1;min-width:0;height:42px;display:flex;align-items:center;justify-content:center;background:#252b4a;border-radius:8px;font-size:13px;cursor:pointer;border-bottom:3px solid #0b0e1a;touch-action:manipulation;user-select:none;-webkit-user-select:none}
 .k.m{background:#3a4270;font-weight:700}
 .k.on{background:var(--ok);color:#04150d}
 .k.t{height:32px;background:#161a2e}
-.ms{display:flex;gap:6px;justify-content:center}
-.ms .k{height:54px;flex:none;width:96px;font-size:14px}
-</style></head><body><main><h1>⌨️ Key Master</h1><div id="app"></div></main>
+.k.t.on{background:var(--ok);color:#04150d}
+</style></head><body><main><h1>⌨️ Key Master</h1><div id='app'></div></main>
 <script>
-const $=s=>document.querySelector(s),app=$('#app');
-const L=[
-{n:'Clipboard Basics',p:'📝 Notepad',t:[['Selected text ko COPY karo','Ctrl+C','Pehle text select karo (Ctrl+A se sab, ya Shift+Arrow se thoda).'],['Copy kiya hua PASTE karo','Ctrl+V','Pehle kuch copy/cut hona chahiye. Cursor wahan rakho jahan paste karna hai.'],['Text CUT karo','Ctrl+X','Select karke cut karo: text hat ke clipboard mein jaata hai.'],['Galti hui - UNDO karo','Ctrl+Z','Har baar dabane par ek step peeche jaata hai.'],['Undo wapas - REDO karo','Ctrl+Y','Sirf Undo ke baad kaam karta hai (Ctrl+Shift+Z bhi chalta hai).'],['Poora text SELECT ALL karo','Ctrl+A']]},
-{n:'Cursor & Selection',p:'📄 Word Processor',t:[['Line ke START par jao','Home'],['Line ke END par jao','End'],['Ek word aage jao','Ctrl+Right'],['Ek word peeche jao','Ctrl+Left'],['Document ke shuru mein jao','Ctrl+Home'],['Document ke end mein jao','Ctrl+End'],['Cursor se line-end tak select karo','Shift+End','Shift + koi bhi move key = select.'],['Ek word aage tak select karo','Ctrl+Shift+Right'],['Ek screen neeche jao','PageDown']]},
-{n:'Formatting & Save',p:'📃 MS Word',t:[['Text BOLD karo','Ctrl+B','Pehle text select karo.'],['Text ITALIC karo','Ctrl+I'],['Text UNDERLINE karo','Ctrl+U'],['Text CENTER align karo','Ctrl+E'],['Document SAVE karo','Ctrl+S'],['Document PRINT karo','Ctrl+P']]},
-{n:'File Explorer',p:'📁 File Explorer',t:[['File ka naam BADLO (rename)','F2','Pehle file select karo.'],['File ko Recycle Bin mein bhejo','Delete','Pehle file select karo.'],['File PERMANENTLY delete karo','Shift+Delete','Bin mein nahi jaati, wapas nahi aayegi!'],['File ki PROPERTIES kholo','Alt+Enter'],['Folder REFRESH karo','F5'],['Parent folder mein jao','Alt+Up'],['Pichle folder par wapas jao','Alt+Left']]},
-{n:'Web Browser',p:'🌐 Browser',t:[['Page par kuch DHUNDHO','Ctrl+F'],['Page REFRESH karo','F5'],['HISTORY kholo','Ctrl+H'],['Page ko BOOKMARK karo','Ctrl+D'],['Pichle page par jao','Alt+Left'],['FULLSCREEN karo','F11']]},
-{n:'Spreadsheet',p:'📊 Excel',t:[['Cell EDIT mode mein jao','F2','Pehle cell select karo.'],['Reference ko $ se LOCK karo','F4','Formula edit mode mein reference par cursor rakho.'],['Poora COLUMN select karo','Ctrl+Space'],['Poori ROW select karo','Shift+Space'],['Data ke neeche tak jump karo','Ctrl+Down'],['Seedha A1 par jao','Ctrl+Home'],['Aaj ki DATE daalo','Ctrl+;']]},
-{n:'Function Row & System',p:'🖥️ Windows',t:[['HELP kholo','F1'],['SEARCH / Find next','F3'],['Address bar / pane badlo','F6'],['SPELL CHECK chalao','F7'],['MENU BAR activate karo','F10'],['SCREENSHOT lo','PrintScreen','Poori screen clipboard mein copy hoti hai.'],['START MENU kholo (Windows key)','Win']]},
-{n:'Power User / Coding',p:'💻 Code Editor',t:[['Line INDENT karo','Tab'],['Indent WAPAS karo','Shift+Tab'],['Line COMMENT karo','Ctrl+/'],['Line ko UPAR move karo','Alt+Up'],['REDO (doosra tarika)','Ctrl+Shift+Z'],['Overwrite mode ON/OFF','Insert'],['Pichla character delete karo','Backspace'],['Popup BAND karo','Esc']]},
-{n:'Mouse + Keyboard',p:'🖱️ Mouse Practice',m:1,t:[['File SELECT karo (single click)','Click'],['Folder KHOLO (double click)','DblClick','L-Click par jaldi se 2 baar tap karo.'],['Menu kholo (right click)','RClick'],['Alag-alag files SELECT karo','Ctrl+Click','Pehle Ctrl tap karo, phir L-Click.'],['Pehli se yahan tak RANGE select karo','Shift+Click','Pehli file click karo, phir Shift tap karke aakhri par click.'],['Page neeche scroll karo','ScrollDown'],['Page upar scroll karo','ScrollUp'],['ZOOM IN karo','Ctrl+ScrollUp'],['ZOOM OUT karo','Ctrl+ScrollDown']]},
-{n:'Bina Mouse Ke',p:'⌨️ Keyboard Only',t:[['Agle button par jao','Tab'],['Pichle button par jao','Shift+Tab'],['Selected button CLICK karo','Enter'],['Checkbox TICK karo','Space'],['Right-click MENU kholo (keyboard se)','Shift+F10','Mouse ke bina right-click ka kaam.'],['Menu mein NEECHE jao','Down'],['Menu mein UPAR jao','Up'],['Menu BAND karo','Esc'],['Menu bar par jao','F10']]},
-{n:'Screenshot → Document',p:'📸 Screenshot Workflow',v:1,sc:'Screen ka ek hissa capture karke naye document mein daalna aur save karna hai.',t:[['Screen ka hissa CAPTURE karo (Snip)','Win+Shift+S','Pehle wo screen kholo jiska screenshot chahiye. Phir ye combo dabao aur area chuno (poori screen ke liye sirf PrtSc).'],['Naya document kholo','Ctrl+N','Word ya Notepad khula hona chahiye. Doosri app mein ho to pehle Alt+Tab se wahan jao.'],['Screenshot PASTE karo','Ctrl+V','Snip khud clipboard mein hota hai, copy ki zarurat nahi. Cursor document mein hona chahiye.'],['Document SAVE karo','Ctrl+S','Pehli baar save par naam poochta hai: naam likho aur Enter dabao.'],['Window BAND karo','Alt+F4','Pehle Ctrl+S zaroor karo, warna changes chale jaate hain. Alt+F4 sirf active window band karta hai.']]},
-{n:'Clipboard Pro',p:'📋 Report Writing',v:1,sc:'Do lines copy karke report mein bina formatting bigde paste karni hain.',t:[['Line SELECT karo','Shift+End','Pehle cursor line ke shuru mein rakho (Home dabao). Shift+End wahan se line ke end tak select karta hai.'],['Selected line COPY karo','Ctrl+C','Copy sirf tab chalta hai jab text select ho.'],['Agli line bhi SELECT karo','Shift+Down','Cursor agli line ke shuru mein lao. Shift+Down se poori line select hoti hai.'],['Ise bhi COPY karo','Ctrl+C','Ab clipboard history mein 2 cheezein hain.'],['CLIPBOARD HISTORY kholo','Win+V','Pehli baar "Turn on" poochta hai. Cursor wahan rakho jahan paste karna hai.'],['Purani item chuno','Down','History list mein Up/Down se item chuno.'],['Chuni hui item PASTE karo','Enter','Enter dabate hi item cursor par paste ho jaati hai.'],['Bina FORMATTING ke paste karo','Ctrl+Shift+V','Website se copy kiya text apna font/colour saath laata hai. Is combo se sirf saaf text aata hai.']]},
-{n:'Multitasking & Windows',p:'🪟 Window Manager',v:1,sc:'Email aur report side-by-side kholni hain, phir ek hang ho chuka app band karna hai.',t:[['Doosri app par SWITCH karo','Alt+Tab','Alt dabaye rakho aur Tab baar baar dabao; Alt chhodte hi window khul jaati hai. On-screen: pehle Alt tap, phir Tab.'],['Window ko LEFT half mein snap karo','Win+Left','Pehle wo window active karo (Alt+Tab). Snap ke baad Windows doosri window chunne ko bolta hai.'],['Doosri window ko RIGHT half mein snap karo','Win+Right','Alt+Tab se doosri window active karo, phir ye combo dabao.'],['Window MAXIMIZE karo','Win+Up','Active window par hi chalta hai.'],['Window neeche karo (restore / minimize)','Win+Down','Pehli baar restore karta hai, doosri baar minimize.'],['Sab windows hata ke DESKTOP dekho','Win+D','Dobara dabane par sab windows wapas aa jaati hain.'],['App HANG hai - TASK MANAGER kholo','Ctrl+Shift+Esc','Ctrl+Alt+Del se tez: seedha Task Manager khulta hai.'],['Hung app chuno','Down','List mein Up/Down se us app par jao jo "Not responding" hai.'],['App ko END TASK karo','Delete','Hung app select hone ke baad. (Windows 10 par Alt+E bhi chalta hai.)']]},
-{n:'Browser Pro (Tabs & Windows)',p:'🌐 Research Session',v:1,sc:'Research ke liye kai tab kholne, unke beech ghoomna aur galti se band hua tab wapas laana hai.',t:[['Naya TAB kholo','Ctrl+T','Browser window active honi chahiye.'],['Agle tab par jao','Ctrl+Tab','Tabs left se right ghoomte hain; aakhri ke baad pehle par aa jaata hai.'],['Pichle tab par jao','Ctrl+Shift+Tab','Ulti disha mein ghoomta hai.'],['Seedha 2nd tab par jao','Ctrl+2','Ctrl+1 se Ctrl+8 tab number hain; Ctrl+9 = aakhri tab. Digit keys Letters tab mein hain.'],['Current tab BAND karo','Ctrl+W','Band karne se pehle dekh lo ki kuch save to nahi karna.'],['Band hua tab WAPAS lao','Ctrl+Shift+T','Galti se band hua tab wapas khulta hai (pichle kai tab tak).'],['Naya WINDOW kholo','Ctrl+N','Alag window = alag workspace. Win+Left/Right se side-by-side rakh sakte ho.'],['PRIVATE (Incognito) window kholo','Ctrl+Shift+N','Firefox mein Ctrl+Shift+P.']]}
-];
-let S={m:'home',l:0,i:0,x:0,sc:0},down=new Set(),mods=new Set(),lock=0,hint=0,w=0,lc=0,tb='a';
+const $=s=>document.querySelector(s),app=$('#app'),esc=x=>String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;');
 const MO=['Win','Ctrl','Alt','Shift'];
-const DN={Click:'🖱️ Left Click',RClick:'🖱️ Right Click',DblClick:'🖱️ Double Click',ScrollUp:'🖱️ Scroll ▲',ScrollDown:'🖱️ Scroll ▼'};
-const LB={PrintScreen:'PrtSc',PageUp:'PgUp',PageDown:'PgDn',Backspace:'⌫',Insert:'Ins',Delete:'Del',CapsLock:'Caps',Up:'▲',Down:'▼',Left:'◀',Right:'▶'};
-const ld=()=>{try{return JSON.parse(localStorage.km)||{}}catch(e){return{}}};
-const sv=(l,s)=>{try{const d=ld();d[l]=Math.max(d[l]||0,s);localStorage.km=JSON.stringify(d)}catch(e){}};
+const P=c=>{const m=c.split('+'),k=m.pop();return{k,C:m.includes('Ctrl'),S:m.includes('Shift'),A:m.includes('Alt'),W:m.includes('Win')}};
+const ld=()=>{try{return JSON.parse(localStorage.km2)||{}}catch(e){return{}}};
+let D=ld();D.st=D.st||{};D.wk=D.wk||{};
+const sv=()=>{try{localStorage.km2=JSON.stringify(D)}catch(e){}};
+let G={m:'home'},mods=new Set(),down=new Set(),kt='a',hint=0,lock=0;
+const sel=s=>s.a<0||s.a==s.c?0:[Math.min(s.a,s.c),Math.max(s.a,s.c)];
+const sT=s=>{const r=sel(s);return r?s.t.slice(r[0],r[1]):''};
+const lb=(s,p)=>p?s.t.lastIndexOf('\n',p-1)+1:0;
+const le=(s,p)=>{const e=s.t.indexOf('\n',p);return e<0?s.t.length:e};
+const wr=(t,i)=>{while(i<t.length&&/\S/.test(t[i]))i++;while(i<t.length&&/\s/.test(t[i]))i++;return i};
+const wl=(t,i)=>{while(i>0&&/\s/.test(t[i-1]))i--;while(i>0&&/\S/.test(t[i-1]))i--;return i};
+const snap=s=>{s.u.push([s.t,s.c,s.a,s.f]);s.r=[]};
+const ins=(s,x)=>{snap(s);const r=sel(s),b=r?r[0]:s.c,e=r?r[1]:s.c;s.t=s.t.slice(0,b)+x+s.t.slice(e);s.c=b+x.length;s.a=-1};
+const del=(s,b,e)=>{if(b<e){snap(s);s.t=s.t.slice(0,b)+s.t.slice(e);s.c=b;s.a=-1}};
+const put=(s,x,pl)=>{ins(s,x.t);if(x.r&&!pl)s.f=1};
+const ED=(t,q={})=>({k:'ed',t,c:q.c==null?0:q.c<0?t.length:q.c,a:-1,cl:(q.cl||[]).map(x=>({...x})),u:[],r:[],y:0,f:0,h:0,hi:0});
+function edK(s,c){const{k,C,S,A,W}=P(c),t=s.t,n=t.length,r=sel(s);
+if(s.h){if(k=='Down')s.hi=Math.min(s.hi+1,s.cl.length-1);else if(k=='Up')s.hi=Math.max(s.hi-1,0);else if(k=='Enter'){s.h=0;put(s,s.cl[s.hi])}else if(k=='Esc')s.h=0;return}
+if(W){if(k=='V'&&s.cl.length){s.h=1;s.hi=0}return}
+if(C&&S&&k=='V'){if(s.cl[0])put(s,s.cl[0],1);return}
+if((C&&k=='V')||(S&&!C&&k=='Insert')){if(s.cl[0])put(s,s.cl[0]);return}
+if(C&&(k=='C'||k=='Insert')){if(r){s.cl.unshift({t:t.slice(r[0],r[1])});s.cl.length=Math.min(s.cl.length,6)}return}
+if((C&&k=='X')||(S&&!C&&k=='Delete')){if(r){s.cl.unshift({t:t.slice(r[0],r[1])});s.cl.length=Math.min(s.cl.length,6);ins(s,'')}return}
+if(C&&k=='Z'&&!S){const p=s.u.pop();if(p){s.r.push([t,s.c,s.a,s.f]);[s.t,s.c,s.a,s.f]=p}return}
+if(C&&(k=='Y'||(S&&k=='Z'))){const p=s.r.pop();if(p){s.u.push([t,s.c,s.a,s.f]);[s.t,s.c,s.a,s.f]=p;s.y++}return}
+if(C&&k=='A'){s.a=0;s.c=n;return}
+let p=null;
+if(k=='Left')p=C?wl(t,s.c):s.c-1;else if(k=='Right')p=C?wr(t,s.c):s.c+1;else if(k=='Home')p=C?0:lb(s,s.c);else if(k=='End')p=C?n:le(s,s.c);
+else if(k=='Up'){const b=lb(s,s.c);p=b?Math.min(lb(s,b-1)+s.c-b,b-1):0}
+else if(k=='Down'){const e=le(s,s.c);p=e>=n?n:Math.min(e+1+s.c-lb(s,s.c),le(s,e+1))}
+if(p!==null){p=Math.max(0,Math.min(n,p));if(!S&&!C&&r&&(k=='Left'||k=='Right'))p=k=='Left'?r[0]:r[1];if(S){if(s.a<0)s.a=s.c}else s.a=-1;s.c=p;return}
+if(k=='Enter')ins(s,'\n');else if(k=='Space')ins(s,' ');
+else if(k=='Backspace'){r?del(s,r[0],r[1]):del(s,C?wl(t,s.c):Math.max(s.c-1,0),s.c)}
+else if(k=='Delete'){r?del(s,r[0],r[1]):del(s,s.c,C?wr(t,s.c):Math.min(s.c+1,n))}
+else if(k=='Esc')s.a=-1;
+else if(k.length==1&&!C&&!A)ins(s,S?k:k.toLowerCase())}
+const edV=s=>{const r=sel(s);let o='';for(let i=0;i<=s.t.length;i++){if(r&&i==r[0])o+='<mark>';if(i==s.c)o+='<i class=cr></i>';if(r&&i==r[1])o+='</mark>';if(i<s.t.length)o+=esc(s.t[i])}
+return `<div class=ed>${o}</div><small>📋 Clipboard: ${s.cl[0]?esc(s.cl[0].t).slice(0,40):'khali'}${s.f?' · 🎨 formatting aa gayi!':''}</small>`+(s.h?`<div class=card><b>Clipboard History</b>${s.cl.map((x,i)=>`<div class='it ${i==s.hi?'on':''}'>${esc(x.t)}</div>`).join('')}</div>`:'')};
+const FL=f=>({k:'fl',f:[...f],s:f.map(()=>0),c:0,a:0,cl:[],bin:[],rn:-1,nm:'',rd:0,rf:0});
+function flK(s,c){const{k,C,S}=P(c),n=s.f.length;
+if(s.rn>=0){if(k=='Enter'){s.f[s.rn]=s.nm||s.f[s.rn];s.rd=1;s.rn=-1}else if(k=='Esc')s.rn=-1;else if(k=='Backspace')s.nm=s.nm.slice(0,-1);else if(k.length==1)s.nm+=S?k:k.toLowerCase();return}
+if((k=='Up'||k=='Down')&&n){const p=Math.max(0,Math.min(n-1,s.c+(k=='Up'?-1:1)));if(C)s.c=p;else if(S){s.c=p;s.s=s.s.map((_,i)=>+(i>=Math.min(s.a,p)&&i<=Math.max(s.a,p)))}else{s.c=s.a=p;s.s=s.s.map((_,i)=>+(i==p))}}
+else if(C&&k=='Space'&&n){s.s[s.c]^=1;s.a=s.c}
+else if(C&&k=='A')s.s=s.s.map(()=>1);
+else if(k=='Esc')s.s=s.s.map(()=>0);
+else if(k=='F2'&&n){s.rn=s.c;s.nm=s.f[s.c]}
+else if(k=='F5')s.rf++;
+else if(k=='Delete'||(C&&k=='D')){const d=s.f.filter((_,i)=>s.s[i]);if(d.length){if(!S)s.bin.push(...d);s.f=s.f.filter((_,i)=>!s.s[i]);s.s=s.f.map(()=>0);s.c=s.a=Math.max(0,Math.min(s.c,s.f.length-1))}}
+else if(C&&(k=='C'||k=='Insert'))s.cl=s.f.filter((_,i)=>s.s[i]);
+else if((C&&k=='V')||(S&&!C&&k=='Insert'))s.cl.forEach(x=>{const e=x.lastIndexOf('.');s.f.push(x.slice(0,e)+' - Copy'+x.slice(e));s.s.push(0)})}
+const flV=s=>s.f.map((x,i)=>`<div class='it ${s.s[i]?'on':''} ${s.c==i?'fc':''}' data-p=${i}>${s.rn==i?'✏️ '+esc(s.nm)+'|':'📄 '+esc(x)}</div>`).join('')+`<small>🗑️ Recycle Bin: ${s.bin.length}${s.rf?' · 🔄 refreshed':''}</small>`;
+const TB=(t,a=0)=>({k:'tb',t:[...t],a,z:[],w:1,i:0,r:0,fs:0,ro:0,b:0});
+function tbK(s,c){const{k,C,S}=P(c),n=s.t.length;
+if(C&&!S&&k=='T'){s.t.push('New Tab');s.a=s.t.length-1}
+else if(C&&(k=='W'||k=='F4')&&n){s.z.push(s.t.splice(s.a,1)[0]);s.a=Math.max(0,Math.min(s.a,s.t.length-1))}
+else if(C&&S&&k=='T'&&s.z.length){s.t.push(s.z.pop());s.a=s.t.length-1;s.ro=1}
+else if(C&&((k=='Tab'&&!S)||k=='PageDown')&&n)s.a=(s.a+1)%n;
+else if(C&&((k=='Tab'&&S)||k=='PageUp')&&n)s.a=(s.a+n-1)%n;
+else if(C&&/^[1-9]$/.test(k)){const i=k=='9'?n-1:+k-1;if(i<n)s.a=i}
+else if(C&&!S&&k=='N')s.w++;
+else if(C&&S&&k=='N')s.i=1;
+else if(C&&k=='D')s.b=1;
+else if(k=='F5'||(C&&k=='R'))s.r++;
+else if(k=='F11')s.fs^=1}
+const tbV=s=>`<div>${s.t.map((x,i)=>`<span class='tab ${i==s.a?'on':''}' data-p=${i}>${esc(x)}</span>`).join('')}</div><div class=ed style=min-height:0>🔗 ${s.t[s.a]?esc(s.t[s.a]).toLowerCase()+'.com':'koi tab nahi'}${s.fs?' · ⛶ Fullscreen':''}${s.b?' · ⭐':''}</div><small>🪟 Windows: ${s.w}${s.i?' · 🕶️ Incognito':''} · 🔄 Refresh: ${s.r}</small>`;
+const WN=(w,a=0)=>({k:'wn',w:w.map(x=>({p:'N',...x})),a,tm:0,ti:0,d:0,pv:[]});
+function wnK(s,c){const{k,C,S,A,W}=P(c),n=s.w.length;
+if(s.tm){if(k=='Down')s.ti=Math.min(s.ti+1,n-1);else if(k=='Up')s.ti=Math.max(s.ti-1,0);else if(k=='Delete'||(A&&k=='E')){if(n){s.w.splice(s.ti,1);s.a=Math.max(0,Math.min(s.a,s.w.length-1));s.ti=Math.max(0,Math.min(s.ti,s.w.length-1))}}else if(k=='Esc'||(A&&k=='F4'))s.tm=0;return}
+if(C&&S&&k=='Esc'){s.tm=1;s.ti=0;return}
+if(!n)return;const w=s.w[s.a];
+if(A&&k=='Tab'){s.a=(s.a+1)%n;if(s.w[s.a].p=='m')s.w[s.a].p='N'}
+else if(A&&k=='F4'){s.w.splice(s.a,1);s.a=Math.max(0,Math.min(s.a,s.w.length-1))}
+else if(W&&k=='Left')w.p='L';else if(W&&k=='Right')w.p='R';else if(W&&k=='Up')w.p='M';
+else if(W&&k=='Down')w.p=w.p=='M'?'N':'m';
+else if(W&&k=='D'){if(!s.d){s.pv=s.w.map(x=>x.p);s.w.forEach(x=>x.p='m');s.d=1}else{s.w.forEach((x,i)=>x.p=s.pv[i]||'N');s.d=0}}}
+const PS={L:'left:0;top:0;width:50%;height:100%',R:'left:50%;top:0;width:50%;height:100%',M:'left:0;top:0;width:100%;height:100%'};
+const wnV=s=>`<div class=dk>${s.w.map((x,i)=>x.p=='m'?'':`<div class='wn ${i==s.a?'ac':''}' style='${PS[x.p]||`left:${8+i*9}%;top:${10+i*9}%;width:46%;height:58%`};z-index:${i==s.a?2:1}' data-p=${i}>${x.n}${x.hung?' ⚠️':''}</div>`).join('')}</div><small>${s.w.map((x,i)=>`<span class='tab ${i==s.a?'on':''}' data-p=${i}>${x.n}${x.p=='m'?' ▁':''}</span>`).join('')}</small>`+(s.tm?`<div class=card><b>Task Manager</b>${s.w.map((x,i)=>`<div class='it ${i==s.ti?'on':''}'>${x.n}${x.hung?' (Not responding)':''}</div>`).join('')}</div>`:'');
+const SC={ed:{key:edK,view:edV},fl:{key:flK,view:flV,tap:(s,i,M)=>{if(M.has('Ctrl')){s.s[i]^=1;s.a=s.c=i}else if(M.has('Shift')){s.c=i;s.s=s.s.map((_,j)=>+(j>=Math.min(s.a,i)&&j<=Math.max(s.a,i)))}else{s.c=s.a=i;s.s=s.s.map((_,j)=>+(j==i))}}},tb:{key:tbK,view:tbV,tap:(s,i)=>{s.a=i}},wn:{key:wnK,view:wnV,tap:(s,i)=>{s.a=i;if(s.w[i].p=='m')s.w[i].p='N'}}};
+const F5=['report.docx','photo.jpg','temp.tmp','old_notes.txt','song.mp3'],T3=['Google','YouTube','News'],W3=()=>WN([{n:'Email'},{n:'Report'},{n:'Video'}]),doc1='Dear Sir,\nPlease find the report.\nRegards,\nAmit';
+const SK=[
+{n:'Copy, Cut, Paste, Undo',i:'✂️',nt:'Copy: Ctrl+C ya Ctrl+Insert\nCut: Ctrl+X ya Shift+Delete\nPaste: Ctrl+V ya Shift+Insert\nUndo: Ctrl+Z | Redo: Ctrl+Y ya Ctrl+Shift+Z\nSelect all: Ctrl+A\nYaad rakho: pehle SELECT, phir copy/cut!',T:[
+['Milk line ko copy karke list ke END mein dobara paste karo',()=>ED('Milk\nBread\nEggs'),s=>s.t.trim()=='Milk\nBread\nEggs\nMilk','Shift+End (line select) → Ctrl+C → Ctrl+End → Enter → Ctrl+V   |   Alternate: Ctrl+Insert, Shift+Insert'],
+['Eggs line ko CUT karke sabse upar le jao',()=>ED('Milk\nBread\nEggs',{c:-1}),s=>s.t.trim()=='Eggs\nMilk\nBread','Shift+Home → Ctrl+X → Ctrl+Home → Ctrl+V → Enter   |   Alternate: Shift+Delete se cut'],
+['Galti! Sab text delete karo, phir UNDO se wapas lao',()=>ED('Meeting at 5pm'),s=>s.t=='Meeting at 5pm'&&s.r.length>0,'Ctrl+A → Delete → Ctrl+Z'],
+['Sab delete karo, Undo karo, phir REDO — text dubara gayab ho jaye',()=>ED('Notes'),s=>s.y>0&&!s.t,'Ctrl+A → Delete → Ctrl+Z → Ctrl+Y   |   Alternate redo: Ctrl+Shift+Z']]},
+{n:'Cursor & Selection',i:'🧭',nt:'Line: Home / End\nDocument: Ctrl+Home / Ctrl+End\nWord jump: Ctrl+←/→\nSelect: Shift + koi bhi move key\nWord select: Ctrl+Shift+←/→\nLine select: Home, phir Shift+End',T:[
+['Cursor ko document ke END mein lao (ek shortcut se)',()=>ED(doc1),s=>s.c==s.t.length,'Ctrl+End'],
+['Cursor ko four word ke shuru par lao (word-jump se)',()=>ED('one two three four five'),s=>s.c==14,'Ctrl+Right × 3'],
+['Sirf 2nd line (Please find the report.) select karo',()=>ED(doc1),s=>sT(s)=='Please find the report.','Down → Shift+End   |   Alternate: Down → Shift+Down → Shift+Left'],
+['Last line Amit select karo (cursor end par hai)',()=>ED(doc1,{c:-1}),s=>sT(s)=='Amit','Shift+Home   |   Alternate: Ctrl+Shift+Left']]},
+{n:'Smart Paste (Clipboard Pro)',i:'🎨',nt:'Ctrl+Shift+V = bina formatting ke paste (website ka text saaf aata hai)\nWin+V = Clipboard History → Up/Down se item chuno → Enter se paste\nHistory mein purani copy ki hui cheezein bhi milti hain',T:[
+['Website se copy kiya text BINA formatting ke paste karo',()=>ED('Report:\n',{c:-1,cl:[{t:'Sales up 20%',r:1}]}),s=>s.t.includes('Sales up 20%')&&!s.f,'Ctrl+Shift+V   (normal Ctrl+V se formatting aa jaati hai, Ctrl+Z se hata sakte ho)'],
+['Clipboard History se sabse PURANA item (First note) paste karo',()=>ED('Todo:\n',{c:-1,cl:[{t:'Third note'},{t:'Second note'},{t:'First note'}]}),s=>s.t.includes('First note'),'Win+V → Down → Down → Enter'],
+['Line 1 aur line 2 dono copy karo, phir History se line 1 list ke end mein paste karo',()=>ED('Alpha\nBeta'),s=>s.t.trim()=='Alpha\nBeta\nAlpha','Shift+End → Ctrl+C → Down → Home → Shift+End → Ctrl+C → Ctrl+End → Enter → Win+V → Down → Enter']]},
+{n:'Files (Explorer)',i:'📁',nt:'Up/Down = file chuno\nCtrl+Space = tick (Ctrl+Down se bina select kiye aage jao)\nShift+Down = range select | Ctrl+A = sab\nDelete ya Ctrl+D = Recycle Bin | Shift+Delete = hamesha ke liye\nCtrl+C / Ctrl+V = copy (Ctrl+Insert / Shift+Insert bhi)\nF2 = rename | F5 = refresh\nMouse (tap): Ctrl sticky + tap = multi-select, Shift sticky + tap = range',T:[
+['temp.tmp aur old_notes.txt ko Recycle Bin mein bhejo',()=>FL(F5),s=>s.bin.includes('temp.tmp')&&s.bin.includes('old_notes.txt')&&s.f.length==3,'Down Down (temp.tmp) → Ctrl+Down → Ctrl+Space (old_notes add) → Delete   |   Alternate: temp.tmp tap, Ctrl sticky + old_notes tap, phir Delete'],
+['Pehli 3 files ek saath select karo',()=>FL(F5),s=>s.s.join('')=='11100','Shift+Down × 2   |   Alternate: pehli file tap, Shift sticky + teesri file tap'],
+['temp.tmp ko HAMESHA ke liye delete karo (Bin mein nahi)',()=>FL(F5),s=>!s.f.includes('temp.tmp')&&!s.bin.includes('temp.tmp'),'Down Down → Shift+Delete'],
+['photo.jpg ki COPY banao',()=>FL(F5),s=>s.f.includes('photo - Copy.jpg'),'Down → Ctrl+C → Ctrl+V   |   Alternate: Ctrl+Insert, Shift+Insert'],
+['photo.jpg ka naam BADLO',()=>FL(F5),s=>s.rd&&!s.f.includes('photo.jpg'),'Down → F2 → Backspace / letters se naam badlo → Enter']]},
+{n:'Browser Tabs & Windows',i:'🌐',nt:'Ctrl+T naya tab | Ctrl+W band | Ctrl+Shift+T band hua tab wapas\nCtrl+Tab agla tab | Ctrl+Shift+Tab pichla | Ctrl+1..8 number se | Ctrl+9 aakhri\nF5 refresh | F11 fullscreen | Ctrl+N naya window | Ctrl+Shift+N incognito',T:[
+['Naya tab kholo',()=>TB(T3),s=>s.t.length==4,'Ctrl+T'],
+['Ctrl+Tab se News tab (3rd) par pahuncho',()=>TB(T3),s=>s.a==2,'Ctrl+Tab × 2   |   Alternate: Ctrl+3, ya Ctrl+Shift+Tab'],
+['Number shortcut se seedha YouTube tab par jao',()=>TB(T3,2),s=>s.a==1,'Ctrl+2   (Ctrl+1 se 8, Ctrl+9 = aakhri tab)'],
+['Current tab band karo, phir galti se band hua tab wapas lao',()=>TB(T3),s=>s.ro&&s.t.length==3,'Ctrl+W → Ctrl+Shift+T   |   Alternate: Ctrl+F4 se band'],
+['Page REFRESH karo',()=>TB(T3),s=>s.r>0,'F5   |   Alternate: Ctrl+R'],
+['Fullscreen mode ON karo',()=>TB(T3),s=>s.fs==1,'F11']]},
+{n:'Windows & Task Manager',i:'🪟',nt:'Alt+Tab = doosri window par switch\nWin+←/→ = window aadhi screen (snap) | Win+↑ maximize | Win+↓ chhoti/minimize\nWin+D = desktop dikhao\nCtrl+Shift+Esc = Task Manager → Up/Down → Delete (ya Alt+E) = End Task\nAlt+F4 = active window band',T:[
+['Email ko LEFT aur Report ko RIGHT snap karo (side-by-side)',W3,s=>s.w.some(x=>x.n=='Email'&&x.p=='L')&&s.w.some(x=>x.n=='Report'&&x.p=='R'),'Win+Left (Email active hai) → Alt+Tab (Report) → Win+Right'],
+['Alt+Tab karke Video window par jao aur use MAXIMIZE karo',W3,s=>s.w.some(x=>x.n=='Video'&&x.p=='M'),'Alt+Tab × 2 → Win+Up'],
+['Sab windows hata ke DESKTOP dikhao',W3,s=>s.w.every(x=>x.p=='m'),'Win+D   (dobara dabane par sab wapas)'],
+['Video hang ho gaya — Task Manager se End Task karo',()=>WN([{n:'Email'},{n:'Report'},{n:'Video',hung:1}]),s=>!s.w.some(x=>x.n=='Video'),'Ctrl+Shift+Esc → Down × 2 → Delete   |   Alternate: Alt+E']]}
+];
+const LB={PageUp:'PgUp',PageDown:'PgDn',Backspace:'⌫',Insert:'Ins',Delete:'Del',CapsLock:'Caps',Up:'▲',Down:'▼',Left:'◀',Right:'▶'};
 const nm=e=>{const c=e.code||'';if(/^Control/.test(c))return'Ctrl';if(/^Alt/.test(c))return'Alt';if(/^Shift/.test(c))return'Shift';if(/^(Meta|OS)/.test(c))return'Win';return c.replace(/^(Key|Digit)/,'').replace('Arrow','').replace('Escape','Esc').replace('Semicolon',';').replace('Slash','/')};
 const cb=(k,e)=>MO.filter(m=>m!=k&&(mods.has(m)||e&&({Ctrl:e.ctrlKey,Alt:e.altKey,Shift:e.shiftKey,Win:e.metaKey})[m])).concat(k).join('+');
-const T=()=>{const a=L[S.l].t[S.i];return{q:a[0],k:a[1],h:a[2]}};
-const notes=v=>(v.sc?'🎯 '+v.sc+'\n\n':'')+v.t.map((t,j)=>(j+1)+'. '+t[1]+' → '+t[0]+(t[2]?'\n   🧠 '+t[2]:'')).join('\n');
-function home(){S.m='home';const d=ld(),tot=Object.values(d).reduce((a,b)=>a+b,0);
-app.innerHTML=`<div class=card>⭐ Total: <b>${tot}</b> / ${L.length*3}<br><small>Level clear karoge to agla khulega. Har step ke saath "kaise" (pre-requisite) milta hai. Notes level se pehle milte hain aur clear karne ke baad Notes Library mein save ho jaate hain. Phone par: Ctrl/Alt/Shift/Win pehle tap karo (ON hoga), phir doosri key.</small></div>`+
-L.map((v,i)=>{const ok=i==0||d[i-1];return `<button class=lv ${ok?'':'disabled'} onclick="intro(${i})">${ok?'':'🔒 '}Level ${i+1}: ${v.n} — ${v.p} ${'⭐'.repeat(d[i]||0)}</button>`}).join('')+
-(Object.keys(d).length?`<div class=card><b>📚 Notes Library</b>`+L.map((v,i)=>d[i]?`<details><summary>Level ${i+1}: ${v.n}</summary><pre>${notes(v)}</pre></details>`:'').join('')+`</div>`:'')}
-function intro(i){S.m='intro';S.l=i;const v=L[i];
-app.innerHTML=`<div class=card><h2>Level ${i+1}: ${v.n}</h2><p>Prototype: <b>${v.p}</b> · ${v.t.length} steps${v.m?' · 🖱️ virtual mouse milega':''}${v.v?' · 🔒 On-screen keyboard se karo (system shortcuts browser pakad leta hai)':''}</p><b>📖 Pehle poora tareeka padh lo:</b><pre>${notes(v)}</pre></div><button onclick=start()>▶ Start Practice</button><button onclick=home() style="background:#444">← Back</button>`}
-function start(){S.m='play';S.i=0;S.x=0;S.sc=0;hint=0;w=0;mods.clear();draw()}
-function draw(){const v=L[S.l],n=v.t.length,t=T();
-app.innerHTML=`<div class=card><div class=bar><i style="width:${S.i/n*100}%"></i></div><small>${v.p} · Step ${S.i+1}/${n} · Score ${S.sc} · Galtiyan ${S.x}</small>${v.sc?`<br><small>🎯 ${v.sc}</small>`:''}</div><div class=card><div class=mock id=mk><h3>${t.q}</h3>${t.h?`<div class=how>🧠 ${t.h}</div>`:''}<div id=ks></div><p id=msg><small>Ctrl/Alt/Shift/Win pehle tap karo, phir key</small></p></div><button onclick="hint=1;paint()">💡 Hint</button></div>`+
-(v.m?`<div class="card ms"><div class=k onclick="vs('Click',event)">🖱️ L-Click</div><div class=k onclick="vs('RClick',event)">R-Click</div><div style="display:flex;flex-direction:column;gap:4px"><div class=k style="height:25px;width:60px" onclick="vs('ScrollUp',event)">▲</div><div class=k style="height:25px;width:60px" onclick="vs('ScrollDown',event)">▼</div></div></div>`:'')+`<div id=kb></div>`;kbd()}
+function home(){G={m:'home'};
+app.innerHTML=`<div class=card>⚡ XP: <b>${D.xp||0}</b><br><small>Ab asli practice hai: screen par real text, files, tabs aur windows milenge. Jo kaam bola hai wo karo — koi bhi sahi tarika (alternate shortcut bhi) chalega. Ctrl/Alt/Shift/Win pehle tap karo (hara ho jaata hai), phir key. Mouse ki jagah seedha screen ke items tap karo.</small></div><button class=lv style=background:#6c8cff onclick=mix()>🎲 Mix Practice (alag-alag cheezein, baar baar)</button>`+
+SK.map((v,i)=>{const ok=i==0||D.st[i-1];return `<button class=lv ${ok?'':'disabled'} onclick=intro(${i})>${ok?v.i:'🔒'} Lesson ${i+1}: ${v.n} ${'⭐'.repeat(D.st[i]||0)}</button>`}).join('')+
+(Object.keys(D.st).length?`<div class=card><b>📚 Notes Library</b>`+SK.map((v,i)=>D.st[i]?`<details><summary>${v.n}</summary><pre>${v.nt}</pre></details>`:'').join('')+`</div>`:'')}
+function intro(i){G={m:'intro'};const v=SK[i];app.innerHTML=`<div class=card><h2>${v.i} ${v.n}</h2><p>${v.T.length} tasks · asli screen par practice</p><b>📖 Pehle notes:</b><pre>${v.nt}</pre></div><button onclick=lsn(${i})>▶ Start</button><button onclick=home() style=background:#444>← Back</button>`}
+function lsn(i){run(SK[i].T.map((_,j)=>[i,j]),SK[i].n,i)}
+function mix(){const pool=[],ok=a=>D.st[a]||(!Object.keys(D.st).length&&a==0);SK.forEach((v,a)=>{if(ok(a))v.T.forEach((_,b)=>{const w=1+(D.wk[a+'.'+b]||0)*2;for(let j=0;j<w;j++)pool.push([a,b])})});
+const u=new Set(pool.map(String)).size,pick=[];while(pick.length<8&&pick.length<u){const x=pool[Math.random()*pool.length|0];if(!pick.some(y=>String(y)==String(x)))pick.push(x)}
+run(pick,'🎲 Mix Practice',-1)}
+function run(q,t,sk){G={m:'play',q,i:0,xp:0,h:0,t,sk,rq:{}};next()}
+function next(){const[a,b]=G.q[G.i];G.cur=SK[a].T[b];G.s=G.cur[1]();hint=0;lock=0;mods.clear();draw()}
+function draw(){const n=G.q.length;app.innerHTML=`<div class=card><div class=bar><i style=width:${G.i/n*100}%></i></div><small>${G.t} · ${G.i+1}/${n} · ⚡ ${G.xp} XP</small><h3 style=margin:8px>${G.cur[0]}</h3><div id=sc class=sc></div><div id=hn class=how style=display:none></div><button onclick=hint1()>💡 Hint</button><button onclick=rst() style=background:#444>↺ Reset</button><br><small>Ctrl/Alt/Shift/Win pehle tap karo (hara hoga), phir key. Koi bhi sahi tarika chalega!</small></div><div id=kb></div>`;view();kbd();if(hint)hn()}
+function view(){if(G.m!='play')return;const e=$('#sc');if(e)e.innerHTML=SC[G.s.k].view(G.s)}
+function hn(){const e=$('#hn');if(e){e.style.display=hint?'block':'none';e.textContent='💡 '+G.cur[3]}}
+function hint1(){hint=1;hn()}
+function rst(){if(G.m!='play'||lock)return;G.s=G.cur[1]();view()}
+function key(c){if(G.m!='play'||lock)return;const s=G.s;SC[s.k].key(s,c);view();if(G.cur[2](s))win()}
+function win(){lock=1;$('#sc').classList.add('ok');const[a,b]=G.q[G.i],id=a+'.'+b;G.xp+=hint?5:10;
+if(hint){G.h++;D.wk[id]=(D.wk[id]||0)+1;if(!G.rq[id]){G.rq[id]=1;G.q.push(G.q[G.i])}}else D.wk[id]=Math.max(0,(D.wk[id]||0)-1);
+setTimeout(()=>{G.i++;G.i>=G.q.length?fin():next()},900)}
+function fin(){const l=G.sk>=0,s=G.h==0?3:G.h<=2?2:1;D.xp=(D.xp||0)+G.xp;if(l)D.st[G.sk]=Math.max(D.st[G.sk]||0,s);sv();G.m='done';
+app.innerHTML=`<div class=card><h2>🎉 Session Complete!</h2><p>⚡ ${G.xp} XP · ${l?'⭐'.repeat(s)+' · ':''}Hints: ${G.h}</p>${l?`<b>📚 Notes (Notes Library mein save ho gaye):</b><pre>${SK[G.sk].nt}</pre>`:'<small>Jin tasks mein hint liya, wo agli Mix Practice mein zyada aayenge.</small>'}</div>`+(l&&G.sk+1<SK.length?`<button onclick=intro(${G.sk+1})>Next Lesson ▶</button>`:'')+`<button onclick=mix()>🎲 Mix Practice</button><button onclick=home()>🏠 Home</button>`}
 function kbd(){const e=$('#kb');if(!e)return;
-const P={a:['1234567890'.split(''),'QWERTYUIOP'.split(''),'ASDFGHJKL;'.split(''),'ZXCVBNM/'.split('')],f:[['Esc','F1','F2','F3'],['F4','F5','F6','F7'],['F8','F9','F10','F11'],['F12','PrintScreen','Insert','Delete']],n:[['Up'],['Left','Down','Right'],['Home','End','PageUp','PageDown'],['Backspace','Tab','Enter'],['Space','CapsLock']]};
-const key=k=>`<div class=k onclick="vk('${k}')">${LB[k]||k}</div>`;
-e.innerHTML='<div class=r>'+MO.map(m=>`<div class="k m ${mods.has(m)?'on':''}" onclick="vm('${m}')">${m}</div>`).join('')+'</div>'+P[tb].map(r=>'<div class=r>'+r.map(key).join('')+'</div>').join('')+'<div class=r>'+[['a','Aa 1-0'],['f','Fn Keys'],['n','Nav Keys']].map(t=>`<div class="k t ${tb==t[0]?'on':''}" onclick="tb='${t[0]}';kbd()">${t[1]}</div>`).join('')+'</div>';paint()}
-function paint(){const e=$('#ks');if(S.m!='play'||!e)return;const t=T().k;
-e.innerHTML=hint?t.split('+').map(k=>`<kbd class="${down.has(k)||mods.has(k)?'on':''}">${DN[k]||k}</kbd>`).join(' + '):'<kbd>?</kbd>'}
-function vm(m){if(S.m!='play')return;if(T().k==m){check(m);mods.clear()}else mods.has(m)?mods.delete(m):mods.add(m);kbd()}
-function vk(k){if(S.m!='play')return;check(cb(k));mods.clear();kbd()}
-function vs(b,e){if(S.m!='play'||lock)return;const t=T().k,n=Date.now();
-if(t=='DblClick'&&b=='Click'){if(n-lc<450){lc=0;check('DblClick')}else{lc=n;$('#msg').innerHTML='<small>Jaldi se dobara tap karo (double-click)</small>'}}
-else check(cb(b,e));mods.clear();kbd()}
-function check(c){if(lock)return;const mk=$('#mk');
-if(c===T().k){lock=1;mk.className='mock ok';S.sc+=hint?5:10;$('#msg').innerHTML='✅ Sahi! <b>'+c+'</b>';
-setTimeout(()=>{lock=0;S.i++;hint=0;w=0;S.i>=L[S.l].t.length?done():draw()},700)}
-else{S.x++;w++;if(w>=2)hint=1;mk.className='mock bad';setTimeout(()=>{if(!lock)mk.className='mock'},350);$('#msg').innerHTML='❌ Tumne dabaya: <b>'+c+'</b> — dobara try karo';paint()}}
-function done(){S.m='done';const s=S.x<=2?3:S.x<=5?2:1;sv(S.l,s);const v=L[S.l];
-app.innerHTML=`<div class=card><h2>🎉 Level Clear!</h2><p>${'⭐'.repeat(s)} · Score ${S.sc} · Galtiyan ${S.x}</p><b>📚 Notes unlock ho gaye (Home ki Notes Library mein hamesha milenge):</b><pre>${notes(v)}</pre></div>`+(S.l+1<L.length?`<button onclick=intro(${S.l+1})>Next Level ▶</button>`:'<div class=card>🏆 Sab levels complete — tum Key Master ho!</div>')+`<button onclick=home()>🏠 Home</button><button onclick=start()>🔁 Dobara</button>`}
-addEventListener('keydown',e=>{if(S.m!='play')return;e.preventDefault();if(e.repeat)return;const k=nm(e);down.add(k);paint();
-if(k=='Ctrl'||k=='Alt'||k=='Shift'||k=='PrintScreen')return;
-check(cb(k,e));mods.clear();kbd()});
-addEventListener('keyup',e=>{down.delete(nm(e));if(S.m=='play'&&e.code=='PrintScreen'){e.preventDefault();check('PrintScreen')}paint()});
-addEventListener('blur',()=>{down.clear();paint()});
+const KP={a:['1234567890'.split(''),'QWERTYUIOP'.split(''),'ASDFGHJKL;'.split(''),'ZXCVBNM/'.split('')],f:[['Esc','F1','F2','F3'],['F4','F5','F6','F7'],['F8','F9','F10','F11'],['F12','Insert']],n:[['Up'],['Left','Down','Right'],['Home','End','PageUp','PageDown'],['Backspace','Delete','Tab','Enter'],['Space','CapsLock']]};
+e.innerHTML=`<div class=r>${MO.map(m=>`<div class='k m ${mods.has(m)||down.has(m)?'on':''}' data-m=${m}>${m}</div>`).join('')}</div>`+KP[kt].map(r=>`<div class=r>${r.map(k=>`<div class=k data-k=${k}>${LB[k]||k}</div>`).join('')}</div>`).join('')+`<div class=r>${[['a','Aa 1-0'],['f','Fn Keys'],['n','Nav Keys']].map(t=>`<div class='k t ${kt==t[0]?'on':''}' data-t=${t[0]}>${t[1]}</div>`).join('')}</div>`}
+document.addEventListener('click',e=>{const d=e.target.closest('[data-k],[data-m],[data-t],[data-p]');if(!d||G.m!='play')return;const a=d.dataset;
+if(a.k!=null){key(cb(a.k));mods.clear();kbd()}
+else if(a.m){mods.has(a.m)?mods.delete(a.m):mods.add(a.m);kbd()}
+else if(a.t){kt=a.t;kbd()}
+else if(a.p!=null&&!lock){const s=G.s,S=SC[s.k];if(S.tap){S.tap(s,+a.p,mods);mods.clear();view();kbd();if(G.cur[2](s))win()}}});
+addEventListener('keydown',e=>{if(G.m!='play')return;e.preventDefault();if(e.repeat)return;const k=nm(e);down.add(k);if(MO.includes(k)){kbd();return}key(cb(k,e));mods.clear();kbd()});
+addEventListener('keyup',e=>{down.delete(nm(e));kbd()});
+addEventListener('blur',()=>{down.clear();kbd()});
 home();
 </script></body></html>
